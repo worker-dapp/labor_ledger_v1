@@ -1,0 +1,21 @@
+{
+    "short_name": "AquaTrust",
+    "name": "AquaTrust PWA",
+    "icons": [
+      {
+        "src": "assets/landing.png",
+        "type": "image/png",
+        "sizes": "192x192"
+      },
+      {
+        "src": "assets/landing.png",
+        "type": "image/png",
+        "sizes": "512x512"
+      }
+    ],
+    "start_url": ".",
+    "display": "standalone",
+    "theme_color": "#FF7043",
+    "background_color": "#FFFFFF"
+  }
+  
