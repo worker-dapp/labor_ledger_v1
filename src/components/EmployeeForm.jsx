@@ -1,9 +1,9 @@
 import React from "react";
-import { Box, Typography, Button, Grid } from "@mui/material";
-import { useNavigate } from "react-router-dom";
+import { Box, TextField, Button, Typography } from "@mui/material";
+import { useNavigate } from "react-router-dom"; // Import useNavigate
 
-const SelectRole = () => {
-  const navigate = useNavigate();
+const EmployeeForm = () => {
+  const navigate = useNavigate(); // Initialize navigate
 
   return (
     <Box
@@ -104,7 +104,7 @@ const SelectRole = () => {
         </Box>
       </Box>
 
-      {/* Title */}
+      {/* Form Title */}
       <Typography
         variant="h5"
         sx={{
@@ -112,73 +112,52 @@ const SelectRole = () => {
           marginBottom: "30px",
         }}
       >
-        Please Select Your Role
+        Employee Registration
       </Typography>
 
-      {/* Role Options */}
-      <Grid container spacing={4} justifyContent="center">
-        {/* Management Role */}
-        <Grid item>
-          <Button
-            variant="contained"
-            onClick={() => navigate("/management-form")}
-            sx={{
-              width: "150px",
-              height: "150px",
-              display: "flex",
-              flexDirection: "column",
-              justifyContent: "center",
-              alignItems: "center",
-              backgroundColor: "#FF7043",
-              "&:hover": { backgroundColor: "#FF5722" },
-              borderRadius: "20px",
-              boxShadow: "0px 4px 6px rgba(0,0,0,0.1)",
-            }}
-          >
-            <Box
-              component="img"
-              src="/assets/management.png"
-              alt="Management"
-              sx={{ width: "70px", height: "70px", marginBottom: "10px" }}
-            />
-            <Typography variant="body1" sx={{ color: "#fff", fontWeight: "bold" }}>
-              Management
-            </Typography>
-          </Button>
-        </Grid>
-
-        {/* Employee Role */}
-        <Grid item>
-          <Button
-            variant="contained"
-            onClick={() => navigate("/employee-form")}
-            sx={{
-              width: "150px",
-              height: "150px",
-              display: "flex",
-              flexDirection: "column",
-              justifyContent: "center",
-              alignItems: "center",
-              backgroundColor: "#FF7043",
-              "&:hover": { backgroundColor: "#FF5722" },
-              borderRadius: "20px",
-              boxShadow: "0px 4px 6px rgba(0,0,0,0.1)",
-            }}
-          >
-            <Box
-              component="img"
-              src="/assets/employee.png"
-              alt="Employee"
-              sx={{ width: "70px", height: "70px", marginBottom: "10px" }}
-            />
-            <Typography variant="body1" sx={{ color: "#fff", fontWeight: "bold" }}>
-              Employee
-            </Typography>
-          </Button>
-        </Grid>
-      </Grid>
+      {/* Form Fields */}
+      <Box
+        component="form"
+        sx={{
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          width: "100%",
+          maxWidth: "400px",
+          gap: "20px",
+        }}
+      >
+        <TextField label="Username" variant="outlined" fullWidth />
+        <TextField
+          label="Ship ID"
+          variant="outlined"
+          fullWidth
+          defaultValue="SHIP-2025-001"
+          InputProps={{
+            readOnly: true,
+          }}
+        />
+        <TextField label="Email ID or Mobile Number" variant="outlined" fullWidth />
+        <TextField label="Password" type="password" variant="outlined" fullWidth />
+        <TextField label="Retype Password" type="password" variant="outlined" fullWidth />
+        <Button
+          variant="contained"
+          onClick={() => navigate("/employee-verification")}
+          sx={{
+            backgroundColor: "#FF7043",
+            "&:hover": { backgroundColor: "#FF5722" },
+            color: "#fff",
+            fontWeight: "bold",
+            width: "100%",
+            maxWidth: "300px",
+            borderRadius: "25px",
+          }}
+        >
+          Register
+        </Button>
+      </Box>
     </Box>
   );
 };
 
-export default SelectRole;
+export default EmployeeForm;

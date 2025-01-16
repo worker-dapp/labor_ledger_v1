@@ -9,6 +9,13 @@ import ViewEmployeeData from "./components/ViewEmployeeData";
 import EmployeePayment from "./components/EmployeePayment";
 import ManageDispute from "./components/ManageDispute";
 
+import EmployeeForm from "./components/EmployeeForm";
+import EmployeeVerification from "./components/EmployeeVerification";
+import MobileLogin from "./components/MobileLogin";
+import EmployeeSchedule from "./components/EmployeeSchedule";
+import EmployeeIncurrals from "./components/EmployeeIncurrals";
+import RaiseDispute from "./components/RaiseDispute";
+
 const App = () => {
   return (
     <Router>
@@ -21,6 +28,12 @@ const App = () => {
         <Route path="/view-employee-data" element={<ViewEmployeeData />} /> 
         <Route path="/employee-payment" element={<EmployeePayment />} />
         <Route path="/manage-dispute" element={<ManageDispute />} />
+        <Route path="/employee-form" element={<EmployeeForm />} />
+        <Route path='/employee-verification' element={<EmployeeVerification />} />
+        <Route path='mobile-login' element={<MobileLogin />} />
+        <Route path='employee-schedule' element={<EmployeeSchedule />} />
+        <Route path='employee-incurrals' element={<EmployeeIncurrals />} />
+        <Route path='raise-dispute' element={<RaiseDispute />} />
       </Routes>
     </Router>
   );
