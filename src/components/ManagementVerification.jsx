@@ -1,9 +1,9 @@
 import React from "react";
 import { Box, TextField, Button, Typography } from "@mui/material";
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom"; // Import useNavigate
 
-const ManagementForm = () => {
-  const navigate = useNavigate();
+const ManagementVerification = () => {
+  const navigate = useNavigate(); // Initialize navigation
 
   return (
     <Box
@@ -60,12 +60,12 @@ const ManagementForm = () => {
           sx={{
             width: "30px",
             height: "30px",
-            backgroundColor: "#FFE0B2",
+            backgroundColor: "#FF5722",
             borderRadius: "50%",
             display: "flex",
             justifyContent: "center",
             alignItems: "center",
-            color: "#FF7043",
+            color: "#fff",
             fontWeight: "bold",
             fontSize: "16px",
             margin: "0 10px",
@@ -89,12 +89,12 @@ const ManagementForm = () => {
           sx={{
             width: "30px",
             height: "30px",
-            backgroundColor: "#FF5722",
+            backgroundColor: "#FFE0B2",
             borderRadius: "50%",
             display: "flex",
             justifyContent: "center",
             alignItems: "center",
-            color: "#fff",
+            color: "#FF7043",
             fontWeight: "bold",
             fontSize: "16px",
             margin: "0 10px",
@@ -112,7 +112,7 @@ const ManagementForm = () => {
           marginBottom: "30px",
         }}
       >
-        Management Registration
+        Email Verification
       </Typography>
 
       {/* Form Fields */}
@@ -124,32 +124,37 @@ const ManagementForm = () => {
           alignItems: "center",
           width: "100%",
           maxWidth: "400px",
-          gap: "20px", 
+          gap: "20px",
         }}
       >
-        <TextField label="Username" variant="outlined" fullWidth />
-        <TextField label="Ship ID" variant="outlined" fullWidth />
-        <TextField label="Email ID" variant="outlined" fullWidth />
-        <TextField label="Password" type="password" variant="outlined" fullWidth />
-        <TextField label="Retype Password" type="password" variant="outlined" fullWidth />
+        <TextField
+          label="Email ID"
+          variant="outlined"
+          fullWidth
+          defaultValue="xxxxxxxx@abc.com"
+          InputProps={{
+            readOnly: true,
+          }}
+        />
+        <TextField label="Verification Code" variant="outlined" fullWidth />
         <Button
           variant="contained"
-          onClick={() => navigate("/management-verification")} 
+          onClick={() => navigate("/email-login")}
           sx={{
             backgroundColor: "#FF7043",
             "&:hover": { backgroundColor: "#FF5722" },
             color: "#fff",
             fontWeight: "bold",
-            width: "100%", 
+            width: "100%",
             maxWidth: "300px",
             borderRadius: "25px",
           }}
         >
-          Register
+          Verify
         </Button>
       </Box>
     </Box>
   );
 };
 
-export default ManagementForm;
+export default ManagementVerification;

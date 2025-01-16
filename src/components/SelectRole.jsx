@@ -1,9 +1,9 @@
 import React from "react";
 import { Box, Typography, Button, Grid } from "@mui/material";
-import { useNavigate } from "react-router-dom"; // Import useNavigate
+import { useNavigate } from "react-router-dom";
 
 const SelectRole = () => {
-  const navigate = useNavigate(); // Define navigate using the useNavigate hook
+  const navigate = useNavigate();
 
   return (
     <Box
@@ -11,7 +11,7 @@ const SelectRole = () => {
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
-        justifyContent: "space-between",
+        justifyContent: "center",
         height: "100vh",
         backgroundColor: "#f9f9f9",
         padding: "20px",
@@ -23,7 +23,7 @@ const SelectRole = () => {
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
-          marginTop: "70px",
+          marginBottom: "40px",
         }}
       >
         {/* Step 1 */}
@@ -106,10 +106,10 @@ const SelectRole = () => {
 
       {/* Title */}
       <Typography
-        variant="h4"
+        variant="h5"
         sx={{
           fontWeight: "bold",
-          marginTop: "-10em",
+          marginBottom: "30px",
         }}
       >
         Please Select Your Role
@@ -121,7 +121,7 @@ const SelectRole = () => {
         <Grid item>
           <Button
             variant="contained"
-            onClick={() => navigate("/management-form")} // Navigate to the management form
+            onClick={() => navigate("/management-form")}
             sx={{
               width: "150px",
               height: "150px",
@@ -133,7 +133,6 @@ const SelectRole = () => {
               "&:hover": { backgroundColor: "#FF5722" },
               borderRadius: "20px",
               boxShadow: "0px 4px 6px rgba(0,0,0,0.1)",
-              marginTop: "-30em",
             }}
           >
             <Box
@@ -163,7 +162,6 @@ const SelectRole = () => {
               "&:hover": { backgroundColor: "#FF5722" },
               borderRadius: "20px",
               boxShadow: "0px 4px 6px rgba(0,0,0,0.1)",
-              marginTop: "-30em",
             }}
           >
             <Box
