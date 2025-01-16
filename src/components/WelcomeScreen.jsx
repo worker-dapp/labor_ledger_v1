@@ -21,11 +21,11 @@ const WelcomeScreen = () => {
       <Box
         component="img"
         src="/assets/landing.png"
-        alt="AquaTrust Logo"
+        alt="LaborLedger Logo"
         sx={{ width: "150px", height: "150px", marginBottom: "20px" }}
       />
       <Typography variant="h4" sx={{ fontWeight: "bold", marginBottom: "10px" }}>
-        Welcome to AquaTrust!
+        Welcome to LaborLedger!
       </Typography>
       <Typography variant="body1" sx={{ color: "gray", marginBottom: "30px" }}>
         Please Register or Sign in to continue

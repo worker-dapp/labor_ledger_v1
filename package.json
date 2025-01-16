@@ -1,7 +1,7 @@
 {
-  "name": "aquatrust",
+  "name": "laborledger",
   "version": "1.0.0",
-  "description": "AquaTrust Progressive Web App",
+  "description": "LaborLedger Progressive Web App",
   "main": "src/index.js",
   "scripts": {
     "start": "react-scripts start",

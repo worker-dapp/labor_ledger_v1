@@ -1,6 +1,6 @@
-# AquaTrust - Progressive Web App
+# LaborLedger - Progressive Web App
 
-AquaTrust is a progressive web app (PWA) designed to streamline role-based management for ship-based workers, such as management and employees. This app features a user-friendly interface, role selection, and form-based registration workflows.
+LaborLedger is a progressive web app (PWA) designed to streamline role-based management for ship-based workers, such as management and employees. This app features a user-friendly interface, role selection, and form-based registration workflows.
 
 ---
 
