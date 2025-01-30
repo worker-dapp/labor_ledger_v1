@@ -27,6 +27,15 @@ import {
 } from "@mui/material";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import FilterListIcon from "@mui/icons-material/FilterList";
+
+import {
+  PieChart,
+  Pie,
+  Tooltip,
+  ResponsiveContainer,
+  Legend
+} from "recharts"; // <-- Recharts imports for Pie Chart
+
 import { supabase } from "../supabaseClient";
 
 const EmployerJobPortal = () => {
@@ -90,6 +99,19 @@ const EmployerJobPortal = () => {
 
     return matchesTitle && matchesType && matchesSchedule;
   });
+
+  // Prepare data for Pie Chart
+  // Using 'value' for the slice size, and 'name' for the label
+  const chartData = jobs.map((job) => ({
+    name: job.title,
+    value: job.applicants.length,
+  }));
+
+  // Calculate total applicants (across all jobs)
+  const totalApplicants = jobs.reduce(
+    (acc, job) => acc + job.applicants.length,
+    0
+  );
 
   // Handle posting a new job
   const handleAddJob = async () => {
@@ -218,8 +240,6 @@ const EmployerJobPortal = () => {
             ))}
           </FormGroup>
 
-          {/* You can add more filters if needed (Schedules, etc.) */}
-
           <Box textAlign="right" mt={2}>
             <Button
               variant="contained"
@@ -236,8 +256,9 @@ const EmployerJobPortal = () => {
         </Box>
       </Drawer>
 
-      {/* Main Content: Job Listings + Post a New Job Button */}
+      {/* Main Content: Job Listings + Chart + Post a New Job Button */}
       <Box sx={{ flex: 1, marginLeft: "80px" }}>
+        {/* Top row: Title + Post Job Button */}
         <Box
           sx={{ display: "flex", justifyContent: "space-between", marginBottom: "20px" }}
         >
@@ -257,6 +278,46 @@ const EmployerJobPortal = () => {
           </Button>
         </Box>
 
+        {/* PieChart Section: total # applicants per job */}
+        <Box
+          sx={{
+            width: "100%",
+            height: 400,
+            marginBottom: "20px",
+            backgroundColor: "#fff",
+            borderRadius: "15px",
+            boxShadow: "0px 4px 6px rgba(0,0,0,0.1)",
+            padding: "2px"
+          }}
+        >
+          <Typography
+            variant="h6"
+            sx={{ fontWeight: "bold", color: "#FF7043", marginTop: "10px", marginLeft: "20px" }}
+          >
+            Applicants Summary
+          </Typography>
+
+          {/* Print the total number of applicants */}
+          <Typography sx={{ mb: 2, marginTop: "10px", marginLeft: "20px" }}>
+            Total Applicants: <strong>{totalApplicants}</strong>
+          </Typography>
+
+          <ResponsiveContainer width="100%" height="100%" style={{ marginTop: "-5%" }}>
+            <PieChart>
+              <Pie
+                data={chartData}
+                dataKey="value"
+                nameKey="name"
+                outerRadius={100}
+                fill="#FF7043"
+                label
+              />
+              <Tooltip />
+            </PieChart>
+          </ResponsiveContainer>
+        </Box>
+
+        {/* Job Cards */}
         <Grid container spacing={3}>
           {filteredJobs.map((job) => (
             <Grid item xs={12} sm={6} md={4} key={job.id}>
@@ -457,9 +518,7 @@ const EmployerJobPortal = () => {
               <TableBody>
                 {selectedApplicants.length === 0 ? (
                   <TableRow>
-                    <TableCell colSpan={3}>
-                      No applicants found.
-                    </TableCell>
+                    <TableCell colSpan={3}>No applicants found.</TableCell>
                   </TableRow>
                 ) : (
                   selectedApplicants.map((applicant, index) => (
