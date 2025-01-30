@@ -23,7 +23,7 @@ import {
   FormControl,
   InputLabel,
   IconButton,
-  Collapse
+  Drawer
 } from "@mui/material";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import FilterListIcon from "@mui/icons-material/FilterList";
@@ -32,10 +32,15 @@ import { supabase } from "../supabaseClient";
 const EmployerJobPortal = () => {
   const [jobs, setJobs] = useState([]);
   const [filters, setFilters] = useState({ title: "", type: [], schedule: [] });
+
+  // Drawer state
+  const [openFilterDrawer, setOpenFilterDrawer] = useState(false);
+
   const [openApplicantsModal, setOpenApplicantsModal] = useState(false);
   const [selectedApplicants, setSelectedApplicants] = useState([]);
   const [openPostJobModal, setOpenPostJobModal] = useState(false);
-  const [filterExpanded, setFilterExpanded] = useState(true);
+
+  // New job form data
   const [newJob, setNewJob] = useState({
     title: "",
     description: "",
@@ -60,7 +65,7 @@ const EmployerJobPortal = () => {
     fetchJobs();
   }, []);
 
-  // Handle filtering
+  // Handle filtering changes
   const handleFilterChange = (e, category) => {
     const { name, checked } = e.target;
     setFilters((prev) => ({
@@ -71,6 +76,7 @@ const EmployerJobPortal = () => {
     }));
   };
 
+  // Filter jobs based on filters
   const filteredJobs = jobs.filter((job) => {
     const matchesTitle = filters.title
       ? job.title.toLowerCase().includes(filters.title.toLowerCase())
@@ -81,34 +87,56 @@ const EmployerJobPortal = () => {
       filters.schedule.length > 0
         ? filters.schedule.includes(job.schedule)
         : true;
+
     return matchesTitle && matchesType && matchesSchedule;
   });
 
   // Handle posting a new job
   const handleAddJob = async () => {
-    if (!newJob.title || !newJob.type || !newJob.schedule || !newJob.manager) {
-      alert("Please fill in all required fields.");
+    // Basic validation
+    if (
+      !newJob.title ||
+      !newJob.type ||
+      !newJob.schedule ||
+      !newJob.manager ||
+      !newJob.location ||
+      !newJob.salary
+    ) {
+      alert("Please fill in all required fields (title, type, schedule, manager, location, salary).");
       return;
     }
 
-    const { data, error } = await supabase.from("jobs").insert([newJob]);
+    // Insert with `.select()` so data isn't null
+    const { data, error } = await supabase
+      .from("jobs")
+      .insert([newJob])
+      .select();
 
     if (error) {
       console.error("Error posting job:", error);
-    } else {
-      setJobs((prev) => [...prev, newJob]); // Add job to UI instantly
-      setOpenPostJobModal(false);
-      setNewJob({
-        title: "",
-        description: "",
-        type: "",
-        schedule: "",
-        manager: "",
-        location: "",
-        salary: "",
-        applicants: [],
-      });
+      return;
     }
+
+    if (!data || data.length === 0) {
+      console.error("No data returned after insert.");
+      return;
+    }
+
+    // Add the new job to the UI
+    setJobs((prev) => [...prev, data[0]]);
+
+    // Reset form and close modal
+    setNewJob({
+      title: "",
+      description: "",
+      type: "",
+      schedule: "",
+      manager: "",
+      location: "",
+      salary: "",
+      applicants: [],
+    });
+    setOpenPostJobModal(false);
   };
 
   // Handle viewing applicants
@@ -128,25 +156,36 @@ const EmployerJobPortal = () => {
         gap: "20px",
       }}
     >
-      {/* Filters Section (Collapsible) */}
-      <Box
-        sx={{
-          width: "250px",
-          backgroundColor: "#fff",
-          padding: "20px",
-          borderRadius: "15px",
-          boxShadow: "0px 4px 6px rgba(0,0,0,0.1)",
-        }}
+      {/* Icon/button to open Filter Drawer */}
+      <Box sx={{ position: "absolute", left: 20, top: 20 }}>
+        <IconButton
+          onClick={() => setOpenFilterDrawer(true)}
+          sx={{ backgroundColor: "#fff", boxShadow: 1 }}
+        >
+          <FilterListIcon sx={{ color: "#FF7043" }} />
+        </IconButton>
+      </Box>
+
+      {/* Filter Drawer (slides in from left) */}
+      <Drawer
+        anchor="left"
+        open={openFilterDrawer}
+        onClose={() => setOpenFilterDrawer(false)}
       >
-        <Box display="flex" justifyContent="space-between" alignItems="center">
-          <Typography variant="h6" sx={{ fontWeight: "bold" }}>
+        <Box
+          sx={{
+            width: 250,
+            padding: "20px",
+            backgroundColor: "#fff",
+            height: "100%",
+          }}
+          role="presentation"
+        >
+          <Typography variant="h6" sx={{ fontWeight: "bold", mb: 2 }}>
             Filters
           </Typography>
-          <IconButton onClick={() => setFilterExpanded(!filterExpanded)}>
-            <FilterListIcon />
-          </IconButton>
-        </Box>
-        <Collapse in={filterExpanded}>
+
+          {/* Search Job Title */}
           <TextField
             label="Search Job Title"
             variant="outlined"
@@ -155,6 +194,7 @@ const EmployerJobPortal = () => {
             value={filters.title}
             onChange={(e) => setFilters({ ...filters, title: e.target.value })}
           />
+
           {/* Job Type */}
           <Typography
             variant="subtitle1"
@@ -177,11 +217,27 @@ const EmployerJobPortal = () => {
               />
             ))}
           </FormGroup>
-        </Collapse>
-      </Box>
 
-      {/* Job Listings + Post a New Job */}
-      <Box sx={{ flex: 1 }}>
+          {/* You can add more filters if needed (Schedules, etc.) */}
+
+          <Box textAlign="right" mt={2}>
+            <Button
+              variant="contained"
+              sx={{
+                backgroundColor: "#FF7043",
+                "&:hover": { backgroundColor: "#FF5722" },
+                borderRadius: "25px",
+              }}
+              onClick={() => setOpenFilterDrawer(false)}
+            >
+              Close
+            </Button>
+          </Box>
+        </Box>
+      </Drawer>
+
+      {/* Main Content: Job Listings + Post a New Job Button */}
+      <Box sx={{ flex: 1, marginLeft: "80px" }}>
         <Box
           sx={{ display: "flex", justifyContent: "space-between", marginBottom: "20px" }}
         >
@@ -200,6 +256,7 @@ const EmployerJobPortal = () => {
             Post a New Job
           </Button>
         </Box>
+
         <Grid container spacing={3}>
           {filteredJobs.map((job) => (
             <Grid item xs={12} sm={6} md={4} key={job.id}>
@@ -220,9 +277,21 @@ const EmployerJobPortal = () => {
                     <strong>Description:</strong> {job.description}
                   </Typography>
                   <Typography>
+                    <strong>Type:</strong> {job.type}
+                  </Typography>
+                  <Typography>
+                    <strong>Schedule:</strong> {job.schedule}
+                  </Typography>
+                  <Typography>
                     <strong>Manager:</strong> {job.manager}
                   </Typography>
                   <Typography>
+                    <strong>Location:</strong> {job.location}
+                  </Typography>
+                  <Typography>
+                    <strong>Salary:</strong> {job.salary}
+                  </Typography>
+                  <Typography sx={{ marginTop: "10px" }}>
                     <strong>Applicants:</strong> {job.applicants.length}
                   </Typography>
                   <Button
@@ -232,7 +301,7 @@ const EmployerJobPortal = () => {
                       backgroundColor: "#FF7043",
                       "&:hover": { backgroundColor: "#FF5722" },
                       borderRadius: "25px",
-                      marginTop: "10px"
+                      marginTop: "10px",
                     }}
                     startIcon={<VisibilityIcon />}
                   >
@@ -263,6 +332,7 @@ const EmployerJobPortal = () => {
           <Typography variant="h6" sx={{ mb: 2 }}>
             Post a New Job
           </Typography>
+
           <TextField
             label="Job Title"
             fullWidth
@@ -271,21 +341,80 @@ const EmployerJobPortal = () => {
             value={newJob.title}
             onChange={(e) => setNewJob({ ...newJob, title: e.target.value })}
           />
+
           <TextField
             label="Description"
             fullWidth
             variant="outlined"
+            multiline
+            rows={3}
             sx={{ mb: 2 }}
             value={newJob.description}
             onChange={(e) => setNewJob({ ...newJob, description: e.target.value })}
           />
-          {/* Feel free to add more fields here for type, schedule, location, etc. */}
+
+          {/* Type (Select) */}
+          <FormControl fullWidth sx={{ mb: 2 }}>
+            <InputLabel>Type</InputLabel>
+            <Select
+              value={newJob.type}
+              label="Type"
+              onChange={(e) => setNewJob({ ...newJob, type: e.target.value })}
+            >
+              <MenuItem value="Full-time">Full-time</MenuItem>
+              <MenuItem value="Part-time">Part-time</MenuItem>
+              <MenuItem value="Contract">Contract</MenuItem>
+            </Select>
+          </FormControl>
+
+          {/* Schedule (Select) */}
+          <FormControl fullWidth sx={{ mb: 2 }}>
+            <InputLabel>Schedule</InputLabel>
+            <Select
+              value={newJob.schedule}
+              label="Schedule"
+              onChange={(e) => setNewJob({ ...newJob, schedule: e.target.value })}
+            >
+              <MenuItem value="Day Shift">Day Shift</MenuItem>
+              <MenuItem value="Night Shift">Night Shift</MenuItem>
+              <MenuItem value="Flexible">Flexible</MenuItem>
+            </Select>
+          </FormControl>
+
+          <TextField
+            label="Manager"
+            fullWidth
+            variant="outlined"
+            sx={{ mb: 2 }}
+            value={newJob.manager}
+            onChange={(e) => setNewJob({ ...newJob, manager: e.target.value })}
+          />
+
+          <TextField
+            label="Location"
+            fullWidth
+            variant="outlined"
+            sx={{ mb: 2 }}
+            value={newJob.location}
+            onChange={(e) => setNewJob({ ...newJob, location: e.target.value })}
+          />
+
+          <TextField
+            label="Salary"
+            fullWidth
+            variant="outlined"
+            sx={{ mb: 2 }}
+            value={newJob.salary}
+            onChange={(e) => setNewJob({ ...newJob, salary: e.target.value })}
+          />
+
           <Button
             variant="contained"
             fullWidth
             sx={{
               backgroundColor: "#FF7043",
               "&:hover": { backgroundColor: "#FF5722" },
+              borderRadius: "25px",
             }}
             onClick={handleAddJob}
           >
@@ -319,7 +448,7 @@ const EmployerJobPortal = () => {
             <Table stickyHeader>
               <TableHead>
                 <TableRow>
-                  {/* Adjust these columns according to your applicant data structure */}
+                  {/* Adjust columns to match your actual applicants structure */}
                   <TableCell>Name</TableCell>
                   <TableCell>Email</TableCell>
                   <TableCell>Phone</TableCell>
@@ -328,12 +457,13 @@ const EmployerJobPortal = () => {
               <TableBody>
                 {selectedApplicants.length === 0 ? (
                   <TableRow>
-                    <TableCell colSpan={3}>No applicants found.</TableCell>
+                    <TableCell colSpan={3}>
+                      No applicants found.
+                    </TableCell>
                   </TableRow>
                 ) : (
                   selectedApplicants.map((applicant, index) => (
                     <TableRow key={index}>
-                      {/* If your applicant object has fields like name, email, phone, you can show them here. */}
                       <TableCell>{applicant.name}</TableCell>
                       <TableCell>{applicant.email}</TableCell>
                       <TableCell>{applicant.phone}</TableCell>
@@ -345,7 +475,12 @@ const EmployerJobPortal = () => {
           </TableContainer>
           <Box textAlign="right" marginTop="20px">
             <Button
-              variant="outlined"
+              variant="contained"
+              sx={{
+                backgroundColor: "#FF7043",
+                "&:hover": { backgroundColor: "#FF5722" },
+                borderRadius: "25px",
+              }}
               onClick={() => setOpenApplicantsModal(false)}
             >
               Close
