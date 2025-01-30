@@ -8,6 +8,7 @@ import EmailLogin from "./components/EmailLogin";
 import ViewEmployeeData from "./components/ViewEmployeeData";
 import EmployeePayment from "./components/EmployeePayment";
 import ManageDispute from "./components/ManageDispute";
+import EmployerJobPortal from "./components/EmployerJobPortal";
 
 import EmployeeForm from "./components/EmployeeForm";
 import EmployeeVerification from "./components/EmployeeVerification";
@@ -40,6 +41,7 @@ const App = () => {
         <Route path='view-employee-schedule' element={<ViewEmployeeSchedule />} />
         <Route path='view-employer-financial-record' element={<ViewEmployerFinancialRecord />} />
         <Route path='employeer-raise-dispute' element={<EmployeerRaiseDispute />} />
+        <Route path="/employer-job-portal" element={<EmployerJobPortal />} />
 
       </Routes>
     </Router>
