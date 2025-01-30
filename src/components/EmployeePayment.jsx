@@ -4,19 +4,10 @@ import {
   Typography,
   Card,
   CardContent,
-  IconButton,
-  Collapse,
   TextField,
   Button,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableRow,
-  TableHead,
-  Paper,
+  Collapse,
 } from "@mui/material";
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 
 const EmployeePayment = () => {
   const [expandedRow, setExpandedRow] = useState(null); // Track which row is expanded
@@ -54,19 +45,17 @@ const EmployeePayment = () => {
           marginBottom: "20px",
         }}
       >
-        <Typography variant="h5" sx={{ fontWeight: "bold" }}>
+        <Typography variant="h5" sx={{ fontWeight: "bold", color: "#FF7043" }}>
           View All Employees
         </Typography>
-        <IconButton>
-          <img
-            src="/assets/profile-icon.png"
-            alt="Profile"
-            style={{ width: "30px", height: "30px" }}
-          />
-        </IconButton>
+        <img
+          src="/assets/profile-icon.png"
+          alt="Profile"
+          style={{ width: "30px", height: "30px" }}
+        />
       </Box>
 
-      {/* Employee Table */}
+      {/* Employee List */}
       <Card
         sx={{
           width: "100%",
@@ -80,68 +69,88 @@ const EmployeePayment = () => {
             label="Search for an employee"
             fullWidth
             variant="outlined"
-            sx={{ marginBottom: "10px" }}
+            sx={{
+              marginBottom: "20px",
+              "& .MuiOutlinedInput-root": {
+                borderRadius: "25px",
+              },
+            }}
           />
-          <TableContainer component={Paper}>
-            <Table>
-              <TableHead>
-                <TableRow>
-                  <TableCell>Emp ID</TableCell>
-                  <TableCell>Salary</TableCell>
-                  <TableCell>Due On</TableCell>
-                  <TableCell>Manual Trigger</TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {employees.map((employee) => (
-                  <React.Fragment key={employee.id}>
-                    <TableRow
-                      hover
-                      onClick={() => handleRowClick(employee.id)}
-                      sx={{
-                        cursor: "pointer",
-                        "&:hover": { backgroundColor: "#f5f5f5" },
-                      }}
-                    >
-                      <TableCell>{employee.id}</TableCell>
-                      <TableCell>{employee.salary}</TableCell>
-                      <TableCell>{employee.due}</TableCell>
-                      <TableCell>
-                        <Button
-                          variant="contained"
-                          sx={{
-                            backgroundColor: "#4CAF50",
-                            color: "#fff",
-                            "&:hover": { backgroundColor: "#45A049" },
-                          }}
-                        >
-                          Trigger
-                        </Button>
-                      </TableCell>
-                    </TableRow>
-                    <TableRow>
-                      <TableCell colSpan={4} sx={{ padding: 0, border: 0 }}>
-                        <Collapse in={expandedRow === employee.id}>
-                          <Box
-                            sx={{
-                              padding: "10px 20px",
-                              backgroundColor: "#f9f9f9",
-                              borderTop: "1px solid #ddd",
-                            }}
-                          >
-                            <Typography>Emp ID: {employee.id}</Typography>
-                            <Typography>Payment: {employee.salary}</Typography>
-                            <Typography>Last Paid: {employee.lastPaid}</Typography>
-                            <Typography>Due On: {employee.due}</Typography>
-                          </Box>
-                        </Collapse>
-                      </TableCell>
-                    </TableRow>
-                  </React.Fragment>
-                ))}
-              </TableBody>
-            </Table>
-          </TableContainer>
+          {employees.map((employee) => (
+            <Box key={employee.id} sx={{ marginBottom: "10px" }}>
+              {/* Employee Row */}
+              <Box
+                sx={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                  padding: "10px 15px",
+                  backgroundColor: "#fff",
+                  borderRadius: "15px",
+                  boxShadow: "0px 2px 4px rgba(0,0,0,0.1)",
+                  cursor: "pointer",
+                }}
+                onClick={() => handleRowClick(employee.id)}
+              >
+                <Typography sx={{ fontWeight: "bold" }}>{employee.id}</Typography>
+                <Typography sx={{ fontWeight: "bold", color: "#FF7043" }}>
+                  {employee.salary}
+                </Typography>
+                <Typography>{employee.due}</Typography>
+                <Button
+                  variant="contained"
+                  sx={{
+                    backgroundColor: "#4CAF50",
+                    "&:hover": { backgroundColor: "#45A049" },
+                    textTransform: "none",
+                    borderRadius: "15px",
+                  }}
+                >
+                  Trigger
+                </Button>
+              </Box>
+
+              {/* Expanded Details */}
+              <Collapse in={expandedRow === employee.id}>
+                <Box
+                  sx={{
+                    marginTop: "10px",
+                    padding: "15px",
+                    borderRadius: "10px",
+                    backgroundColor: "#f9f9f9",
+                    boxShadow: "0px 2px 4px rgba(0,0,0,0.1)",
+                  }}
+                >
+                  <Typography>
+                    <strong>Emp ID:</strong> {employee.id}
+                  </Typography>
+                  <Typography>
+                    <strong>Payment:</strong> {employee.salary}
+                  </Typography>
+                  <Typography>
+                    <strong>Last Paid:</strong> {employee.lastPaid}
+                  </Typography>
+                  <Typography>
+                    <strong>Due On:</strong> {employee.due}
+                  </Typography>
+                  <Button
+                    variant="contained"
+                    sx={{
+                      backgroundColor: "#FF7043",
+                      "&:hover": { backgroundColor: "#FF5722" },
+                      color: "#fff",
+                      fontWeight: "bold",
+                      width: "100%",
+                      borderRadius: "25px",
+                      marginTop: "10px",
+                    }}
+                  >
+                    Trigger
+                  </Button>
+                </Box>
+              </Collapse>
+            </Box>
+          ))}
         </CardContent>
       </Card>
     </Box>
