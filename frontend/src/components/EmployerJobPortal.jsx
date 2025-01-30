@@ -75,10 +75,12 @@ const EmployerJobPortal = () => {
     const matchesTitle = filters.title
       ? job.title.toLowerCase().includes(filters.title.toLowerCase())
       : true;
-    const matchesType = filters.type.length > 0 ? filters.type.includes(job.type) : true;
-    const matchesSchedule = filters.schedule.length > 0
-      ? filters.schedule.includes(job.schedule)
-      : true;
+    const matchesType =
+      filters.type.length > 0 ? filters.type.includes(job.type) : true;
+    const matchesSchedule =
+      filters.schedule.length > 0
+        ? filters.schedule.includes(job.schedule)
+        : true;
     return matchesTitle && matchesType && matchesSchedule;
   });
 
@@ -94,7 +96,7 @@ const EmployerJobPortal = () => {
     if (error) {
       console.error("Error posting job:", error);
     } else {
-      setJobs((prev) => [...prev, newJob]);
+      setJobs((prev) => [...prev, newJob]); // Add job to UI instantly
       setOpenPostJobModal(false);
       setNewJob({
         title: "",
@@ -154,7 +156,10 @@ const EmployerJobPortal = () => {
             onChange={(e) => setFilters({ ...filters, title: e.target.value })}
           />
           {/* Job Type */}
-          <Typography variant="subtitle1" sx={{ fontWeight: "bold", marginBottom: "10px" }}>
+          <Typography
+            variant="subtitle1"
+            sx={{ fontWeight: "bold", marginBottom: "10px" }}
+          >
             Job Type
           </Typography>
           <FormGroup>
@@ -177,7 +182,9 @@ const EmployerJobPortal = () => {
 
       {/* Job Listings + Post a New Job */}
       <Box sx={{ flex: 1 }}>
-        <Box sx={{ display: "flex", justifyContent: "space-between", marginBottom: "20px" }}>
+        <Box
+          sx={{ display: "flex", justifyContent: "space-between", marginBottom: "20px" }}
+        >
           <Typography variant="h5" sx={{ fontWeight: "bold", color: "#FF7043" }}>
             Job Dashboard
           </Typography>
@@ -196,18 +203,37 @@ const EmployerJobPortal = () => {
         <Grid container spacing={3}>
           {filteredJobs.map((job) => (
             <Grid item xs={12} sm={6} md={4} key={job.id}>
-              <Card sx={{ borderRadius: "15px", boxShadow: "0px 4px 6px rgba(0,0,0,0.1)" }}>
+              <Card
+                sx={{
+                  borderRadius: "15px",
+                  boxShadow: "0px 4px 6px rgba(0,0,0,0.1)",
+                }}
+              >
                 <CardContent>
-                  <Typography variant="h6" sx={{ fontWeight: "bold", marginBottom: "10px" }}>
+                  <Typography
+                    variant="h6"
+                    sx={{ fontWeight: "bold", marginBottom: "10px" }}
+                  >
                     {job.title}
                   </Typography>
-                  <Typography><strong>Description:</strong> {job.description}</Typography>
-                  <Typography><strong>Manager:</strong> {job.manager}</Typography>
-                  <Typography><strong>Applicants:</strong> {job.applicants.length}</Typography>
+                  <Typography>
+                    <strong>Description:</strong> {job.description}
+                  </Typography>
+                  <Typography>
+                    <strong>Manager:</strong> {job.manager}
+                  </Typography>
+                  <Typography>
+                    <strong>Applicants:</strong> {job.applicants.length}
+                  </Typography>
                   <Button
                     variant="contained"
                     onClick={() => handleViewApplicants(job.applicants)}
-                    sx={{ backgroundColor: "#FF7043", "&:hover": { backgroundColor: "#FF5722" }, borderRadius: "25px" }}
+                    sx={{
+                      backgroundColor: "#FF7043",
+                      "&:hover": { backgroundColor: "#FF5722" },
+                      borderRadius: "25px",
+                      marginTop: "10px"
+                    }}
                     startIcon={<VisibilityIcon />}
                   >
                     View Applicants
@@ -219,30 +245,112 @@ const EmployerJobPortal = () => {
         </Grid>
       </Box>
 
-      {/* View Applicants Modal */}
-      <Modal open={openApplicantsModal} onClose={() => setOpenApplicantsModal(false)}>
-        <Box sx={{ position: "absolute", top: "50%", left: "50%", transform: "translate(-50%, -50%)", width: 500, bgcolor: "background.paper", boxShadow: 24, p: 4, borderRadius: "15px" }}>
-          <Typography variant="h6" sx={{ mb: 2 }}>Applicants</Typography>
-          <TableContainer component={Paper}>
-            <Table>
+      {/* Post Job Modal */}
+      <Modal open={openPostJobModal} onClose={() => setOpenPostJobModal(false)}>
+        <Box
+          sx={{
+            position: "absolute",
+            top: "50%",
+            left: "50%",
+            transform: "translate(-50%, -50%)",
+            width: 500,
+            bgcolor: "background.paper",
+            boxShadow: 24,
+            p: 4,
+            borderRadius: "15px",
+          }}
+        >
+          <Typography variant="h6" sx={{ mb: 2 }}>
+            Post a New Job
+          </Typography>
+          <TextField
+            label="Job Title"
+            fullWidth
+            variant="outlined"
+            sx={{ mb: 2 }}
+            value={newJob.title}
+            onChange={(e) => setNewJob({ ...newJob, title: e.target.value })}
+          />
+          <TextField
+            label="Description"
+            fullWidth
+            variant="outlined"
+            sx={{ mb: 2 }}
+            value={newJob.description}
+            onChange={(e) => setNewJob({ ...newJob, description: e.target.value })}
+          />
+          {/* Feel free to add more fields here for type, schedule, location, etc. */}
+          <Button
+            variant="contained"
+            fullWidth
+            sx={{
+              backgroundColor: "#FF7043",
+              "&:hover": { backgroundColor: "#FF5722" },
+            }}
+            onClick={handleAddJob}
+          >
+            Post Job
+          </Button>
+        </Box>
+      </Modal>
+
+      {/* Applicants Modal */}
+      <Modal
+        open={openApplicantsModal}
+        onClose={() => setOpenApplicantsModal(false)}
+      >
+        <Box
+          sx={{
+            position: "absolute",
+            top: "50%",
+            left: "50%",
+            transform: "translate(-50%, -50%)",
+            width: 600,
+            bgcolor: "background.paper",
+            boxShadow: 24,
+            p: 4,
+            borderRadius: "15px",
+          }}
+        >
+          <Typography variant="h6" sx={{ mb: 2 }}>
+            Applicants
+          </Typography>
+          <TableContainer component={Paper} sx={{ maxHeight: 400 }}>
+            <Table stickyHeader>
               <TableHead>
                 <TableRow>
+                  {/* Adjust these columns according to your applicant data structure */}
                   <TableCell>Name</TableCell>
                   <TableCell>Email</TableCell>
-                  <TableCell>Contact</TableCell>
+                  <TableCell>Phone</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
-                {selectedApplicants.map((applicant, index) => (
-                  <TableRow key={index}>
-                    <TableCell>{applicant.name}</TableCell>
-                    <TableCell>{applicant.email}</TableCell>
-                    <TableCell>{applicant.contact}</TableCell>
+                {selectedApplicants.length === 0 ? (
+                  <TableRow>
+                    <TableCell colSpan={3}>No applicants found.</TableCell>
                   </TableRow>
-                ))}
+                ) : (
+                  selectedApplicants.map((applicant, index) => (
+                    <TableRow key={index}>
+                      {/* If your applicant object has fields like name, email, phone, you can show them here. */}
+                      <TableCell>{applicant.name}</TableCell>
+                      <TableCell>{applicant.email}</TableCell>
+                      <TableCell>{applicant.phone}</TableCell>
+                    </TableRow>
+                  ))
+                )}
               </TableBody>
             </Table>
           </TableContainer>
+          <Box textAlign="right" marginTop="20px">
+            <Button
+              variant="outlined"
+              onClick={() => setOpenApplicantsModal(false)}
+            >
+              Close
+            </Button>
+          </Box>
         </Box>
       </Modal>
     </Box>
