@@ -19,12 +19,19 @@ import RaiseDispute from "./components/RaiseDispute";
 import ViewEmployeeSchedule from "./components/ViewEmployeeSchedule";
 import ViewEmployerFinancialRecord from "./components/ViewEmployerFinancialRecord";
 import EmployeerRaiseDispute from "./components/EmployeerRaiseDispute";
+import LandingPage from "./components/LandingPage";
+
+// worker onboarding form
+import WorkerOnboardingForm from "./components/Contract";
+
+
 
 const App = () => {
   return (
     <Router>
       <Routes>
-        <Route path="/" element={<WelcomeScreen />} />
+        {/* <Route path="/" element={<WelcomeScreen />} /> */}
+        <Route path="/" element={<LandingPage />} />
         <Route path="/select-role" element={<SelectRole />} />
         <Route path="/management-form" element={<ManagementForm />} />
         <Route path="/management-verification" element={<ManagementVerification />} />
@@ -42,6 +49,9 @@ const App = () => {
         <Route path='view-employer-financial-record' element={<ViewEmployerFinancialRecord />} />
         <Route path='employeer-raise-dispute' element={<EmployeerRaiseDispute />} />
         <Route path="/employer-job-portal" element={<EmployerJobPortal />} />
+
+        // worker onboarding form
+        <Route path="/worker-onboarding-form" element={<WorkerOnboardingForm />} />
 
       </Routes>
     </Router>
